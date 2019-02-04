@@ -1,0 +1,642 @@
+JDBC DEMO:
+===========================================
+Oracle Deiver classe
+we can use any one othe below OracleDriver
+"oracle.jdbc.OracleDriver"
+"oracle.jdbc.driver.OracleDriver"
+=======================================================
+Step 1:-Load Driver
+
+using Class.forName()
+Class.forName("oracle.jdbc.OracleDriver");
+Class.forName("oracle.jdbc.driver.OracleDriver
+
+using DriverManager.registerDriver(driver);
+
+try
+{
+    Driver driver = new oracle.jdbc.driver.OracleDriver();
+    DriverManager.registerDriver(driver);
+}
+catch (SQLException e)
+{
+    System.out.println("Driver Class Can Not Be Loaded");
+}
+
+Know the driver.
+
+Enumeration<Driver> enumeration = DriverManager.getDrivers();
+		while (enumeration.hasMoreElements()) {
+			Driver driver = (Driver) enumeration.nextElement();
+			System.out.println(driver.getClass().getName());
+
+		}
+
+========================================================
+Step 2:
+
+ get connection
+ type4
+ Connection connection=	DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe","RISUSER_OWNER", "RISUSER_OWNER");
+ 
+ Get connection methids 3 here
+1. using getConnection(String URL, String username, String password) :
+
+String URL = "jdbc:oracle:thin:@localhost:1521:XE";
+String username = "username";
+String password = "password";
+Connection con = DriverManager.getConnection(URL, username, password);
+
+2. Using getConnection(String URL) :
+
+Here, URL consist of URL of the database, username and password.
+
+String URL = "jdbc:oracle:thin:username/password@localhost:1521:XE";
+Connection con = DriverManager.getConnection(URL);
+
+3 .Using getConnection(String URL, Properties prop) :
+
+String URL = "jdbc:oracle:thin:@localhost:1521:XE";
+Properties prop = new Properties();
+prop.put("username", "username");
+prop.put("password", "password");
+Connection con = DriverManager.getConnection(URL, prop);
+ =========================================================================
+ step 3:
+ 
+ preapre statement
+ 
+ 1. using statement -- it is good for single recods
+ Statement statement = connection.createStatement();
+ 
+ 2. using PreparedStatement -- good to work with multple records
+ 
+ PreparedStatement preparedStatement = connection.prepareStatement("insert into student values(?,?,?,?)");
+ 
+ 3. callableStatement usd execute stored procedure
+ callableStatement = connection.prepareCall("{call P1}");
+ 
+ 
+ =================================================================================
+ 
+ step 4:
+ 
+ execute statement
+ 
+ DDL :-- create ,Alter,Drop, truncate
+ DML  :---insert , update ,delete
+ DRL  :-- select
+ 
+ 
+ boolean =statement.execute(DDL);
+ int =statement.executeUpdate(DML);
+ ResultSet =statement.executeQuery(DRL
+ 
+ 
+ boolean =preparedStatement.execute(DDL);
+ int =preparedStatement.executeUpdate(DML);
+ ResultSet =preparedStatement.executeQuery(DRL);
+ ============================================================================
+ Create table and drop tablepublic 
+ static void main(String[] args) throws ClassNotFoundException, SQLException {
+
+		// load class
+		Class.forName("oracle.jdbc.OracleDriver");
+		System.out.println("driver class loaded ......");
+		// get connection
+		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER",
+				"RISUSER_OWNER");
+		System.out.println("connection created.........");
+		Statement statement = connection.createStatement();
+		
+		String ddlDroptable ="drop table student";
+		statement.execute(ddlDroptable);
+
+		String dllCreatetable= "create table student (StudentId number, StudentName varchar2(50), StudentMarks number, Grade varchar2(50) )";
+		statement.execute(dllCreatetable);
+		System.out.println("Table created successfully.........");
+		connection.close();
+		statement.close();
+		System.out.println("Connections closed..........");
+	}
+	
+	=======================================================================================
+Insert into table
+public static void main(String[] args) {
+
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			System.out.println("Driver loaded successfully.......");
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}
+
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER",
+					"RISUSER_OWNER");
+			System.out.println("connection created successfully.......");
+
+			Statement statement = connection.createStatement();
+
+			String dmlinsert = "insert into student values(111,'upender','507','A')";
+
+			statement.executeUpdate(dmlinsert);
+
+			System.out.println("student record insert sucssesfully");
+
+			connection.close();
+			statement.close();
+
+			System.out.println("connections closed");
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+	===================================================================================================================================
+select from database
+
+public static void main(String[] args) throws ClassNotFoundException, SQLException {
+
+		Class.forName("oracle.jdbc.OracleDriver");
+		System.out.println("Driver loaded.........");
+
+		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER",
+				"RISUSER_OWNER");
+		System.out.println("connection created.....");
+
+		Statement statement = connection.createStatement();
+		String drlSelect = "select * from student";
+		ResultSet resultSet = statement.executeQuery(drlSelect);
+
+		while (resultSet.next()) {
+
+			System.out.println("Student Id:" + resultSet.getInt(1));
+			System.out.println("Student Name:" + resultSet.getString(2));
+			System.out.println("Student Marks :" + resultSet.getInt(3));
+			System.out.println("Student grade :" + resultSet.getString(4));
+			System.out.println("-------------------------------------");
+
+		}
+=============================================================================================================
+
+ResultSet Methods:-
+
+	Class.forName("oracle.jdbc.driver.OracleDriver");
+
+		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER",
+				"RISUSER_OWNER");
+		Statement statement = connection.createStatement();
+		String drlquery = "select * from student";
+		ResultSet resultSet = statement.executeQuery(drlquery);
+		
+		//know the no of columns in column data type
+		  ResultSetMetaData resultSetMetaData= resultSet.getMetaData();
+		int noOfColumns=  resultSetMetaData.getColumnCount();
+		System.out.println("No of columns in student table :"+noOfColumns);
+		
+		for (int i=1;i<=noOfColumns;i++) {
+		String columnName	=resultSetMetaData.getColumnName(i);
+		String datatype =resultSetMetaData.getColumnTypeName(i);
+		System.out.println("column num :"+i+"..."+"column Name :"+columnName+"......"+"column datatype :"+datatype);
+			
+		}
+		
+		//Retrieve data from db
+		
+		while (resultSet.next()) {
+			
+			System.out.println(resultSet.getInt("STUDENTID"));
+			System.out.println(resultSet.getString("STUDENTNAME"));
+			System.out.println(resultSet.getInt("STUDENTMARKS"));
+			System.out.println(resultSet.getString("GRADE"));
+		}
+=========================================================================================================
+
+Get DB details from Propertis file.
+
+
+
+DB.Properties
+
+driver=oracle.jdbc.driver.OracleDriver
+url=jdbc:oracle:thin:@localhost:1523:xe
+user=RISUSER_OWNER
+password=RISUSER_OWNER
+
+
+public static void main(String[] args)
+			throws FileNotFoundException, IOException, ClassNotFoundException, SQLException {
+
+		Properties properties = new Properties();
+		properties.load(new FileInputStream("C:\\git\\CoreJava\\Jdbc\\JDBCDemo\\src\\DB.Properties"));
+
+		System.out.println(properties.getProperty("user"));
+		System.out.println(properties.getProperty("password"));
+
+		Class.forName(properties.getProperty("driver"));
+
+		Connection connection =DriverManager.getConnection(properties.getProperty("url"), properties);
+		System.out.println(connection);
+		System.out.println("connection craeated .........");
+		
+	}
+============================================================================================================================
+Prepared statement Demo
+public static void main(String[] args) throws ClassNotFoundException, SQLException {
+
+		Class.forName("oracle.jdbc.OracleDriver");
+
+		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER",
+				"RISUSER_OWNER");
+		PreparedStatement preparedStatement = connection.prepareStatement("insert into student values(?,?,?,?)");
+		
+		preparedStatement.setInt(1, 222);
+		preparedStatement.setString(2, "ABHI");
+		preparedStatement.setInt(3, 520);
+		preparedStatement.setString(4, "A");
+		preparedStatement.executeUpdate();
+		
+		preparedStatement.setInt(1, 333);
+		preparedStatement.setString(2, "NVN");
+		preparedStatement.setInt(3, 498);
+		preparedStatement.setString(4, "B");
+		preparedStatement.executeUpdate();
+	}
+	
+=========================================================================================================
+get data from user and insert into table
+	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+		
+		Class.forName("oracle.jdbc.OracleDriver");
+		Connection connection =DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER", "RISUSER_OWNER");
+		PreparedStatement preparedStatement =connection.prepareStatement("insert into student values(?,?,?,?)");
+		
+		Scanner scanner = new Scanner(System.in);
+		
+		while (true) {
+			
+			System.out.println("Enter student Id :");
+			int id=scanner.nextInt();
+			preparedStatement.setInt(1, id);
+			System.out.println("Enter student Name :");
+			String name=scanner.next();
+			preparedStatement.setString(2, name);
+			System.out.println("Enter student Marks:");
+			int marks=scanner.nextInt();
+			preparedStatement.setInt(3, marks);
+			System.out.println("Enter student grade :");
+			String grade=scanner.next();
+			preparedStatement.setString(4, grade);
+			preparedStatement.executeUpdate();
+			
+			System.out.println("Do you want to insert one more recode ? if yes press 1 else 2");
+			int userInput =scanner.nextInt();
+			
+			if (userInput==1) {
+				
+			} else {
+				System.exit(0);
+			}
+			
+		}
+		
+	}	
+===========================================================================================================================
+delete records using prepareStatement
+
+public static void main(String[] args) throws ClassNotFoundException, SQLException {
+
+		Class.forName("oracle.jdbc.OracleDriver");
+
+		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER",
+				"RISUSER_OWNER");
+
+		PreparedStatement preparedStatement = connection.prepareStatement("delete from student where studentid=?");
+
+		Scanner scanner = new Scanner(System.in);
+
+		while (true) {
+			
+			System.out.println("Enter Student id whic do want delete :");
+			int id =scanner.nextInt();
+			preparedStatement.setInt(1, id);
+			preparedStatement.executeUpdate();
+			
+			System.out.println("DO you want to delete one more recode press 1 else 2");
+			
+			int userinput =scanner.nextInt();
+			if (userinput==1) {
+				
+			} else {
+				System.out.println("Thanks you");
+				System.exit(0);
+			}
+			
+			
+			
+
+		}
+	}
+
+=======================================================================================================
+select records from DB using prepareStatement
+
+public static void main(String[] args) throws ClassNotFoundException, SQLException {
+
+		Class.forName("oracle.jdbc.OracleDriver");
+
+		Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER",
+				"RISUSER_OWNER");
+
+		PreparedStatement preparedStatement = connection.prepareStatement("select * from student where studentid=?");
+
+		Scanner scanner = new Scanner(System.in);
+
+		while (true) {
+
+			System.out.println("Enter Student id  :");
+			int id = scanner.nextInt();
+			preparedStatement.setInt(1, id);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			while (resultSet.next()) {
+
+				System.out.println("Student ID :" + resultSet.getInt(1));
+				System.out.println("Student Name :" + resultSet.getString(2));
+				System.out.println("Student Marks :" + resultSet.getInt(3));
+				System.out.println("Student Grade :" + resultSet.getString(4));
+
+			}
+
+			System.out.println("DO you want to select one more record press 1 else 2");
+
+			int userinput = scanner.nextInt();
+			if (userinput == 1) {
+
+			} else {
+				System.out.println("Thanks you");
+				System.exit(0);
+			}
+
+		}
+	}
+=======================================================================================================
+	
+Java Program To Call Stored Procedure With No Parameters :*/
+public class CallableStatementDemo {
+
+	static {
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			System.out.println("Driver class loaded........");
+		} catch (ClassNotFoundException e) {
+			System.out.println("Unable to load the driver class");
+		}
+	}
+
+	public static void main(String[] args) {
+
+		Connection connection = null;
+		CallableStatement callableStatement = null;
+
+		try {
+			connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER",
+					"RISUSER_OWNER");
+			System.out.println("connection created");
+			callableStatement = connection.prepareCall("{call P1}");
+			callableStatement.execute();
+			System.out.println("stored procedure executed .........");
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		finally {
+			
+			try {
+				if (callableStatement!=null) {
+					callableStatement.close();
+					callableStatement=null;
+				}
+				
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+			
+			try {
+				if (connection!=null) {
+					connection.close();
+					connection=null;
+				}
+				
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+		}
+	}
+}
+
+==============================================================================================================================
+
+/*
+Java Program To Call Stored Procedure With IN Parameters*/
+
+public class CallableStatementDemo2 {
+
+	static {
+
+		try {
+			Class.forName("oracle.jdbc.OracleDriver");
+			System.out.println("Driver loading is compledted");
+		} catch (ClassNotFoundException e) {
+
+			System.out.println("Driver loading is faild");
+		}
+	}
+
+	public static void main(String[] args) {
+
+		Connection connection = null;
+		CallableStatement callableStatement = null;
+		
+		try {
+		connection=	DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER", "RISUSER_OWNER");
+		System.out.println("Connection created.........");
+		callableStatement=connection.prepareCall("{call P2('UPENDER TADEWAR',123)}");
+		System.out.println("Stored procedure executed..........");
+			callableStatement.execute();
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}
+		
+		finally {
+			
+			try {
+				if (callableStatement!=null) {
+					callableStatement.close();
+				}
+				
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+			
+			try {
+				if (connection!=null) {
+					connection.close();
+					connection=null;
+					
+					System.out.println("connection closed");
+				}
+				
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+		}
+	}
+}
+
+===========================================================================================================================================
+
+//Java Program To Call Stored Procedure With IN And OUT Parameters :
+public class CallableStatement3 {
+
+	static {
+
+		try {
+			Class.forName("oracle.jdbc.OracleDriver");
+			System.out.println("Driver loading is compledted");
+		} catch (ClassNotFoundException e) {
+
+			System.out.println("Driver loading is faild");
+		}
+	}
+
+	public static void main(String[] args) {
+
+		Connection connection = null;
+		CallableStatement callableStatement = null;
+
+		try {
+			connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER",
+					"RISUSER_OWNER");
+			System.out.println("Connection created.........");
+			callableStatement = connection.prepareCall("{call P3(?,?)}");
+			callableStatement.setInt(1, 123);
+			
+			
+			callableStatement.registerOutParameter(2, Types.VARCHAR);
+			System.out.println("Stored procedure executed..........");
+			callableStatement.execute();
+			
+			String grde =callableStatement.getString(2);
+			System.out.println("Garde :"+grde);
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		finally {
+
+			try {
+				if (callableStatement != null) {
+					callableStatement.close();
+				}
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+
+			try {
+				if (connection != null) {
+					connection.close();
+					connection = null;
+
+					System.out.println("connection closed");
+				}
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+	}
+}
+===================================================================================================
+/*Java Program To Call Stored Procedure With IN OUT 
+Parameter*/
+public class CallableStatementDemo4 {
+
+	static {
+
+		try {
+			Class.forName("oracle.jdbc.OracleDriver");
+			System.out.println("Driver loading is compledted");
+		} catch (ClassNotFoundException e) {
+
+			System.out.println("Driver loading is faild");
+		}
+	}
+
+	public static void main(String[] args) {
+
+		Connection connection = null;
+		CallableStatement callableStatement = null;
+
+		try {
+			connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1523:xe", "RISUSER_OWNER",
+					"RISUSER_OWNER");
+			System.out.println("Connection created.........");
+			callableStatement = connection.prepareCall("{call P4(?,?)}");
+			callableStatement.setInt(1, 123);
+			callableStatement.setString(2, "LAST");
+			callableStatement.registerOutParameter(2, Types.VARCHAR);
+			System.out.println("Stored procedure executed..........");
+			callableStatement.execute();
+
+			String grde = callableStatement.getString(2);
+			System.out.println("Garde :" + grde);
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		finally {
+
+			try {
+				if (callableStatement != null) {
+					callableStatement.close();
+				}
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+
+			try {
+				if (connection != null) {
+					connection.close();
+					connection = null;
+
+					System.out.println("connection closed");
+				}
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+	}
+
+}
+	
