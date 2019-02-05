@@ -1,0 +1,40 @@
+Statement createStatement() throws SQLException	
+This method creates a java.sql.Statement object which can be used to send the SQL statements to the database.
+
+PreparedStatement prepareStatement(String sql)  throws SQLException	
+This method creates a java.sql.PreparedStatement object which can be used to send the parameterized SQL statements to database.
+
+CallableStatement prepareCall(String sql) throws SQLException	
+This method creates java.sql.CallableStatement object which can be used to call stored procedures of the database.
+
+String nativeSQL(String sql) throws SQLException	
+This method converts the specified SQL statements into native SQL statements of the database.
+
+DatabaseMetaData getMetaData() throws SQLException	
+This method returns java.sql.DatabaseMetaData object which contains all comprehensive information about a database.
+
+void abort(Executor executor) throws SQLException	
+This method terminates the current Connection object and releases the resources held by it.
+
+void setAutoCommit(boolean autoCommit) throws SQLException	
+This method sets the auto-commit mode of this Connection object. If the auto-commit mode of a Connection object is true, then all SQL statements will be executed and committed as individual transactions. If the auto-commit mode is false then all SQL statements will be grouped in transactions. By default, auto-commit mode of a Connection object is true.
+
+boolean getAutoCommit() throws SQLException	
+This method returns auto-commit mode of this Connection object.
+void commit() throws SQLException	This method makes all previous changes made to database since last commit() OR rollback() as permanent. This method should be used only when auto-commit mode of Connection object is false.
+
+void rollback() throws SQLException	This method erases all changes made to database in the current transaction. This method also should be called when auto-commit mode of a Conncetion object is false.
+
+SQLWarning getWarnings() throws SQLException	
+This method returns all SQL warnings reported for this Connection object.
+
+void clearWarnings() throws SQLException	
+This method clears all SQL warnings reported for this Connection object.
+
+boolean isValid(int timeout) throws SQLException	
+This method checks whether the current Connection object is still valid or is it closed.
+
+boolean isClosed() throws SQLException	
+This method checks whether the current Conncetion object is closed or not.
+
+void close() throws SQLException	This method closes the current Conncetion object and releases the resources held by it.

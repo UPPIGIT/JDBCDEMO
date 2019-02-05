@@ -1,0 +1,27 @@
+
+public static synchronized void registerDriver(java.sql.Driver driver)	
+This method registers the specified driver with the DriverManager. If the driver is already registered then no action is taken.
+
+public static synchronized void deregisterDriver(java.sql.Driver driver)
+	This method removes the specified driver from the list of registered drivers with the DriverManager. If the specified driver is not found in the list then no action is taken. If found it will be removed from the list.
+
+public static Enumeration<Driver> getDrivers()
+This method returns an enumeration containing all registered drivers of the DriverManager.
+
+public static Driver getDriver(String url)	
+This method returns the driver from the list of registered drivers which understand the specified URL.
+
+public static void setLoginTimeout(int seconds)	
+This method sets the maximum time in seconds that a driver will wait while attempting to connect to a database. If you pass zero as LoginTimeOut then driver will wait infinitely while attempting to connect to a database.
+
+public static int getLoginTimeout()
+	This method returns maximum time in second that a driver can wait while attempting to connect to database.
+
+public static Connection getConnection(String URL, String username, String password) throws SQLException	
+	This method returns a Connection object after establishing the connection with the database at the specified URL with specified username and password. If the Driver class of the database is not registered with the DriverManager, it will throw SQLException.
+
+public static Connection getConnection(String URL) throws SQLException	
+	This method returns a Connection object after establishing the connection with the database at the specified URL. If the Driver class of the database is not registered with the DriverManager, it will throw SQLException.
+	
+public static Connection getConnection(String URL, Properties prop) throws SQLException	
+This method returns a Connection object after establishing the connection with the database at the specified URL.  The second argument ‘prop’ contains username and password of the database. If the Driver class of the database is not registered with the DriverManager, it will throw SQLException.

@@ -1,0 +1,6 @@
+Method Name	Description
+int getColumnCount() throws SQLException	Returns the number of columns in a ResultSet.
+String getColumnName(int column) throws SQLException	Returns the column name.
+String getColumnTypeName(int column) throws SQLException	Returns the database specific datatype of the column.
+String getTableName(int column) throws SQLException	Returns the column’s table name.
+String getSchemaName(int column) throws SQLException	Returns the name of the schema of the column’s table.
